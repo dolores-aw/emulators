@@ -23,8 +23,8 @@ import time
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-np.random.seed(1234)
-tf.set_random_seed(1234)
+#np.random.seed(1234)
+#tf.set_random_seed(1234)
 
 
 class PhysicsInformedNN:
@@ -79,8 +79,8 @@ class PhysicsInformedNN:
 
         self.optimizer = tf.contrib.opt.ScipyOptimizerInterface(self.loss,
                                                                 method='L-BFGS-B',
-                                                                options={'maxiter': 50,
-                                                                         'maxfun': 50,
+                                                                options={'maxiter': 50000,
+                                                                         'maxfun': 50000,
                                                                          'maxcor': 50,
                                                                          'maxls': 50,
                                                                          'ftol': 1.0 * np.finfo(float).eps})
@@ -172,7 +172,7 @@ class PhysicsInformedNN:
                 lossy_a, lossy_b = self.sess.run([self.loss_a, self.loss_b], feed_dict = tf_dict) #add self.loss_a/b
                 #with open('epochs_v_error_hp.p', 'rb') as fp:
                 #    d = pickle.load(fp)
-                inputs = interiorburgerslambda.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, N_u2, N_f2, m, typen, random_seed=1234, debugging=False)
+                inputs = interiorburgerslambda.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, N_u2, N_f2, m, typen, debugging=False)
                 #data = scipy.io.loadmat('burgers_shock.mat')
                 #u = np.real(data['usol']).T.flatten()[:,None]
                 #u_pred, f_pred = self.predict(self.X_star)
@@ -199,7 +199,7 @@ class PhysicsInformedNN:
 
 
             if (it & (it - 1)) == 0:
-                inputs = interiorburgerslambda.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, N_u2, N_f2, m, typen, random_seed=1234, debugging=False)
+                inputs = interiorburgerslambda.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, N_u2, N_f2, m, typen, debugging=False)
                 u_pred, f_pred = self.predict(self.X_star)
 
                 plotting.plotting(inputs, u_pred, base_plt_dir, "{}".format(it))

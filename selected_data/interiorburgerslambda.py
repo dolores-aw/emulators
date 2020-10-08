@@ -28,7 +28,7 @@ class PhysicsInformedNN(object):
     def __init__(self, x0, u0, tb, X_f, layers, lb, ub, X_star, N_u, N_f):
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore")
-            tf.set_random_seed(1234)  # todo: consider timing.... this could be complicated
+            #tf.set_random_seed(1234)  # todo: consider timing.... this could be complicated
 
             X0 = np.concatenate((x0, 0 * x0), 1)  # (x0, 0)
             X_lb = np.concatenate((0 * tb + lb[0], tb), 1)  # (lb[0], tb)
@@ -199,7 +199,7 @@ class PhysicsInformedNN(object):
                 start_time = time.time()
 
             if (it & (it - 1)) == 0:
-                inputs = prepare_nn_inputs(burgers_data_loc, random_seed=1234, debugging=False)
+                inputs = prepare_nn_inputs(burgers_data_loc, debugging=False)
                 u_pred, f_pred = self.predict(self.X_star)
                 plotting.plotting(inputs, u_pred, base_plt_dir, "{}".format(it))
 
@@ -283,7 +283,7 @@ class NNInputs_burgers(object):
     # __repr__ = __str__
 
 
-def prepare_nn_inputs(data_loc, random_seed, debugging=False):
+def prepare_nn_inputs(data_loc, debugging=False):
     noise = 0.0
 
     # Domain bounds
@@ -310,7 +310,7 @@ def prepare_nn_inputs(data_loc, random_seed, debugging=False):
     X_star = np.hstack((X.flatten()[:, None], T.flatten()[:, None]))
 
     ###########################
-    np.random.seed(random_seed)
+    #np.random.seed(random_seed)
     idx_x = np.random.choice(x.shape[0], N0, replace=False)
     idx_t = np.random.choice(t.shape[0], N_b, replace=False)
     x0 = x[idx_x, :]
@@ -320,7 +320,7 @@ def prepare_nn_inputs(data_loc, random_seed, debugging=False):
     return NNInputs(x0, u0, tb, X_f, lb, ub, X_star, x, t, Exact)
 
 
-def prepare_nn_inputs_burgers(data_loc, N_u, N_f, N_u2, N_f2, m, typen, random_seed, debugging=False):
+def prepare_nn_inputs_burgers(data_loc, N_u, N_f, N_u2, N_f2, m, typen, debugging=False):
     nu = 0.01 / np.pi
     #N_u = 100
     #N_f = 10000

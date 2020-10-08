@@ -8,13 +8,12 @@ import interiorburgerslambda, argparser_raissi, plotting, burgersraissilambda
 import scipy.io
 import pickle
 def main():
-    N_u = 50
-    N_f = 10
-    N_u2 = 1
-    N_f2 = 500
-    typen = 'X_f' #or 'X_u' or 'both'
-    trialn = 0
-    m =.6 #0.5
+    N_u = 50 # num. of total points in S_u
+    N_f = 10 # num. of total points in S_f
+    N_u2 = 1 # num. of points of S_u to choose within m of x  = 0
+    N_f2 = 500 # num. of points of S_f to choose within m of x = 0
+    typen = 'N_f' #or 'N_u' or 'both'; for now, keep N_f
+    m =.5 # distance from x = 0 to select certain points
     if typen == 'N_u' :
         N_f2 = 0
     if typen == 'N_f' :
@@ -25,7 +24,6 @@ def main():
     args = args_parser.parse_args_verified()
     layers = [2, 100, 100, 100, 100, 2]
     burgers_layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
-    input_seed = 1234
     #N_f = 2**N_f - N_f2
     lam = 0.00001
 
@@ -55,7 +53,7 @@ def main():
     errors = []
     for k in range(0,10):
        #declaring, training model
-        inputs = interiorburgerslambda.prepare_nn_inputs_burgers('burgers_shock.mat', N_u, N_f, N_u2, N_f2, m, typen, random_seed = input_seed, debugging=False)
+        inputs = interiorburgerslambda.prepare_nn_inputs_burgers('burgers_shock.mat', N_u, N_f, N_u2, N_f2, m, typen, debugging=False)
         model = burgersraissilambda.PhysicsInformedNN(lam, inputs.X_u_train,  inputs.u_train, inputs.X_f_train, burgers_layers, lb, ub, inputs.nu, X_star, N_u, N_f, N_u2, N_f2, m, typen)
         start_time = time.time()
         #if N_f > 0:
@@ -88,7 +86,7 @@ def main():
         #if typen == 'both':
         scipy.io.savemat('chosen_data/sols/solution_data_%s_%s_%s_%s_%s.mat' % (m, N_u2, N_f2, typen, error), solution_dict)
         #if typen == 'N_u' :
-            #scipy.
+        #scipy.
         errors.append(error)
         #             loss, weights, biases
      #   with open('epochs_v_error_hp.p', 'rb') as fp:
@@ -122,6 +120,7 @@ def main():
     #print(l)
     #with open('final_lambda.p', 'wb') as fp:
     #    pickle.dump({'lambda': l}, fp, protocl=2)
+    print(errors)
     with open('datacomparison.p', 'rb') as fp:
         d = pickle.load(fp)
     if typen in d.keys():
