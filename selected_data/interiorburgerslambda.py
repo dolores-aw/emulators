@@ -252,7 +252,7 @@ class NNInputs(object):
 
 
 class NNInputs_burgers(object):
-    def __init__(self, X_u_train, u_train, X_f_train, lb, ub, nu, X_star, x, t, exact):
+    def __init__(self, X_u_train, u_train, X_f_train, X_u_train2, u_train2, X_f_train2, lb, ub, nu, X_star, x, t, exact):
         self.X_u_train = X_u_train
         self.u_train = u_train
         self.X_f_train = X_f_train
@@ -263,6 +263,9 @@ class NNInputs_burgers(object):
         self.x = x
         self.t = t
         self.exact = exact
+        self.X_u_train2 = X_u_train2
+        self.u_train2 = u_train2
+        self.X_f_train2 = X_f_train2
 
     # def __str__(self):
     #     s = "{}<x0={}".format(self.__class__.__name__, self.x0.shape)

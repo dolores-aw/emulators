@@ -148,7 +148,7 @@ class PhysicsInformedNN:
     def callback(self, loss):
         print('Loss:', loss)
 
-    def train(self, nIter, burgers_data_loc,N_u, N_f,N_f2, m, base_plt_dir):
+    def train(self, nIter, burgers_data_loc,N_u, N_f, N_u2, N_f2, m, typen, base_plt_dir):
 
         tf_dict = {self.x_u_tf: self.x_u, self.t_u_tf: self.t_u, self.u_tf: self.u,
                    self.x_f_tf: self.x_f, self.t_f_tf: self.t_f}
@@ -281,38 +281,38 @@ if __name__ == "__main__":
     # X_u_train = X_u_train[idx, :]
     # u_train = u_train[idx, :]
 
-    burgers_data_loc = '~/data/burgers_shock.mat'
-    inputs = interior_burgers.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, random_seed=1234, debugging=False)
+    #burgers_data_loc = '~/data/burgers_shock.mat'
+    #inputs = interior_burgers.prepare_nn_inputs_burgers(burgers_data_loc, N_u, N_f, random_seed=1234, debugging=False)
 
-    model = PhysicsInformedNN(inputs.X_u_train, inputs.u_train, inputs.X_f_train, layers, inputs.lb, inputs.ub, inputs.nu, inputs.X_star, N_u, N_f)
+    #model = PhysicsInformedNN(inputs.X_u_train, inputs.u_train, inputs.X_f_train, layers, inputs.lb, inputs.ub, inputs.nu, inputs.X_star, N_u, N_f)
 
-    start_time = time.time()
-    losses = model.train(nIter, '~/data/burgers_shock.mat', '~/plots')
-    elapsed = time.time() - start_time
-    print('Training time: %.4f' % (elapsed))
+    #start_time = time.time()
+    #losses = model.train(nIter, '~/data/burgers_shock.mat', '~/plots')
+    #elapsed = time.time() - start_time
+    #print('Training time: %.4f' % (elapsed))
 
-    u_pred, f_pred = model.predict(inputs.X_star)
-    u_star = inputs.exact.flatten()[:, None]
+    #u_pred, f_pred = model.predict(inputs.X_star)
+    #u_star = inputs.exact.flatten()[:, None]
 
-    error_u = np.linalg.norm(u_star - u_pred, 2) / np.linalg.norm(u_star, 2)
-    print('Error u: %e' % (error_u))
+    #error_u = np.linalg.norm(u_star - u_pred, 2) / np.linalg.norm(u_star, 2)
+    #print('Error u: %e' % (error_u))
 
-    t = inputs.t
-    x = inputs.x
-    X, T = np.meshgrid(x, t)
+    #t = inputs.t
+    #x = inputs.x
+    #X, T = np.meshgrid(x, t)
 
-    U_pred = griddata(inputs.X_star, u_pred.flatten(), (X, T), method='cubic')
-    Error = np.abs(inputs.exact - U_pred)
+    #U_pred = griddata(inputs.X_star, u_pred.flatten(), (X, T), method='cubic')
+    #Error = np.abs(inputs.exact - U_pred)
 
-    plt.close()
-    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
-    pd.Series(losses).plot(logy=True, ax=ax)
-    lp_loc = '/tmp/loss_plot.eps'
-    plt.savefig(lp_loc)
-    print("saved loss plot to {}".format(lp_loc))
+    #plt.close()
+    #fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    #pd.Series(losses).plot(logy=True, ax=ax)
+    #lp_loc = '/tmp/loss_plot.eps'
+    #plt.savefig(lp_loc)
+    #print("saved loss plot to {}".format(lp_loc))
 
-    save_base_dir = '~/junk/eg_model'
-    model.save_weights_and_biases(os.path.join(save_base_dir, 'weights_and_biases_2.npz'))
+    #save_base_dir = '~/junk/eg_model'
+    #model.save_weights_and_biases(os.path.join(save_base_dir, 'weights_and_biases_2.npz'))
 
-    u_pred, f_pred = model.predict(inputs.X_star)  # X_star = tf.convert_to_tensor(X_star) ?
-    plotting.plotting(inputs, u_pred, '~/plots')
+    #u_pred, f_pred = model.predict(inputs.X_star)  # X_star = tf.convert_to_tensor(X_star) ?
+    #plotting.plotting(inputs, u_pred, '~/plots')
