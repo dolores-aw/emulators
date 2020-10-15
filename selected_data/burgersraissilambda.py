@@ -68,10 +68,10 @@ class PhysicsInformedNN:
 
         #self.regularizer = self.extract_weights(self.weights)
         self.varis = tf.trainable_variables()
-        self.lossl2 = tf.add_n([ tf.nn.l2_loss(v) for v in self.varis]) * self.lam
+        self.lossl2 = tf.add_n([ tf.nn.l2_loss(v) for v in self.varis]) * 0.00001
 
         self.loss = tf.reduce_mean(tf.square(self.u_tf - self.u_pred)) + \
-                    tf.reduce_mean(tf.square(self.f_pred)) + \
+                    self.lam * tf.reduce_mean(tf.square(self.f_pred)) + \
                     tf.reduce_mean(self.lossl2)
 
         self.loss_a = tf.reduce_mean(tf.square(self.u_tf - self.u_pred))
@@ -160,9 +160,9 @@ class PhysicsInformedNN:
 
             # Print
             if it % 10 == 0:
-                print('L2 LOSS:')
-                weights_value = self.sess.run(self.weights)
-                print(weights_value)
+                #print('L2 LOSS:')
+                #weights_value = self.sess.run(self.weights)
+                #print(weights_value)
                 elapsed = time.time() - start_time
                 loss_value = self.sess.run(self.loss, tf_dict)
                 losses[it] = loss_value

@@ -324,9 +324,11 @@ def prepare_nn_inputs_burgers(data_loc, N_u, N_f, N_u2, N_f2, m, typen, debuggin
     nu = 0.01 / np.pi
     #N_u = 100
     #N_f = 10000
-    if typen == 'N_u' or typen == 'both':
+    print(N_f)
+    if typen == 'N_u':
         N_u = N_u - N_u2
-    if typen == 'N_f' or typen == 'both':
+        N_f = 2**N_f
+    elif typen == 'N_f':
         N_f = 2**N_f - N_f2
     data = scipy.io.loadmat(os.path.expanduser(data_loc))
 
@@ -368,16 +370,21 @@ def prepare_nn_inputs_burgers(data_loc, N_u, N_f, N_u2, N_f2, m, typen, debuggin
 
     X_f_train = lb + (ub - lb) * lhs(2, N_f) #a selection of 50000 points in domain
     X_f_train2 = lb2 + (ub2 - lb2) * lhs(2, N_f2)
-    X_f_train = np.vstack((X_f_train, X_u_train))
-    if typen == 'N_f' or typen == 'both':
+    #X_f_train = np.vstack((X_f_train, X_u_train))
+    if typen == 'N_f':
         X_f_train = np.vstack((X_f_train, X_f_train2))
-    if typen == 'N_u' or typen == 'both':
+    if typen == 'N_u':
+        print(X_u_train.shape)
+        print(X_u_train2.shape)
         X_u_train = np.vstack((X_u_train, X_u_train2))
-        u_train2 = np.vstack((u_train, u_train2))
+        u_train = np.vstack((u_train, u_train2))
+        print(u_train.shape)
+        print(X_u_train.shape)
+    X_f_train = np.vstack((X_f_train, X_u_train))
     if typen == 'N_f':
         X_u_train2 = []
         u_train2 = []
-    if typen == 'N_u' : 
-        X_f_train2 = []
+    #if typen == 'N_u' : 
+    #    X_f_train2 = []
 
     return NNInputs_burgers(X_u_train, u_train, X_f_train, X_u_train2, u_train2, X_f_train2, lb, ub, nu, X_star, x, t, Exact)
