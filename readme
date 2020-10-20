@@ -1,0 +1,3 @@
+command I use to run:
+./scripts/runitallmultiwrapper.sh --data-loc 'burgers_shock.mat', --save-loc './', --lossplot-loc './plots', --base-plot-dir './', --epochs 5000, --N_u 50, --N_f 1024, --N_u2 0, N_f2 500, --m .25, --time 3600
+time = maximum # of seconds to run skopt
