@@ -1,2 +1,2 @@
 command I use to run:
-sbatch - pwillett-gpu -c1 runitall2.sh
+sbatch -p willett-gpu -c1 runitall2.sh
