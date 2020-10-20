@@ -1,0 +1,8 @@
+edit find_lambda with values for N_u, N_f, (total sizes of S_u and S_f, respectfully) (int)
+N_u2, N_f2 (total sizes of sets to be concentrated around x=0) (int)
+m (distance from x=0 to concentrate the sets) (real #)
+and typen (whether S_u should have N_u2 points concentrated around x=0 or S_f should have N_f2 points concentrated around x=0) (string, either 'N_u' or 'N_f)
+
+*typen = 'both', which concentrates both sets S_u and S_f, should also work, but I haven't tested it very much yet.
+
+**this code requires the existence of an empty dictionary param_dict_%s_%s_%s_%s_%s_%s.p % (N_u, N_f, N_u2, N_f2, m, typen)
