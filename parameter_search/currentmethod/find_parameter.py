@@ -16,7 +16,11 @@ m = 0.2
 ntrials = 20
 
 lam_list = [0.01, 0.1, 0.5, 0.25, 1, 1.25, 1.5, 1.1, 1.01]
-
+temp_d = {}
+for lam in lam_list:
+    temp_d[lam] = []
+with open('param_dict_%s_%s_%s_%s_%s_%s.p' % (N_u, N_f, N_u2, N_f2, m, typen), 'wb') as fp:
+    pickle.dump(temp_d, fp, protocol=2)
 #if not os.path.isfile('param_dict_%s_%s_%s_%s_%s.p' % (N_u,N_f,N_u,N_f2,typen)):
 #    with open('param_dict_%s_%s_%s_%s_%s.p' % (N_u,N_f,N_u2,N_f2,typen), 'wb') as fp:
 #        pickle.dump({}, fp,protocol=2)
@@ -26,10 +30,10 @@ for lam in lam_list:
     #for trial in range(0,ntrials):
     error = train_find_parameter.training(inputs, N_u,N_f,N_u2,N_f2, typen, m, lam)
     errors.append(error)
-    with open('param_dict_%s_%s_%s_%s_%s.p'% (N_u,N_f,N_u2,N_f2,typen), 'rb') as fp:
+    with open('param_dict_%s_%s_%s_%s_%s_%s.p'% (N_u,N_f,N_u2,N_f2,m,typen), 'rb') as fp:
         d = pickle.load(fp)
     d[lam] = d[lam] + errors
-    with open('param_dict_%s_%s_%s_%s_%s.p' % (N_u,N_f,N_u2,N_f2,typen), 'wb') as fp:
+    with open('param_dict_%s_%s_%s_%s_%s_%s.p' % (N_u,N_f,N_u2,N_f2,m,typen), 'wb') as fp:
         pickle.dump(d, fp, protocol=2)
 
 comparison_dict = {}
