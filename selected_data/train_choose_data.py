@@ -9,23 +9,26 @@ import scipy.io
 import pickle
 def main():
     N_u = 50 # num. of total points in S_u
-    N_f = 10 # num. of total points in S_f
-    N_u2 = 1 # num. of points of S_u to choose within m of x  = 0
+    N_f = 10 # 2^N_f num. of total points in S_f
+    N_u2 = 25 # num. of points of S_u to choose within m of x  = 0
     N_f2 = 500 # num. of points of S_f to choose within m of x = 0
     typen = 'N_f' #or 'N_u' or 'both'; for now, keep N_f
-    m =.5 # distance from x = 0 to select certain points
-    if typen == 'N_u' :
-        N_f2 = 0
-    if typen == 'N_f' :
-        N_u2 = 0
+    m  = .25 # distance from x = 0 to select certain points
+    #if typen == 'N_u' :
+    #%    N_f2 = 0
+    #if typen == 'N_f' :
+    #    N_u2 = 0
     #lambdas = [0.00001,0.00005, 0.0001,0.0005, 0.001, 0.005, 0.01]
     #lam = lambdas[0]
     args_parser = argparser_raissi.Parser()
     args = args_parser.parse_args_verified()
+    #m = args.msize
     layers = [2, 100, 100, 100, 100, 2]
     burgers_layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 1]
     #N_f = 2**N_f - N_f2
-    lam = 0.00001
+    with open('param_%s_%s_%s_%s_%s.p' % (N_u, N_f, N_u2, N_f2, typen), 'rb') as fp:
+       temp_d = pickle.load(fp)
+    lam = temp_d[m] 
 
     #preparing actual solution u
     data = scipy.io.loadmat('burgers_shock.mat')
@@ -54,6 +57,7 @@ def main():
     for k in range(0,10):
        #declaring, training model
         inputs = interiorburgerslambda.prepare_nn_inputs_burgers('burgers_shock.mat', N_u, N_f, N_u2, N_f2, m, typen, debugging=False)
+        print(inputs.X_f_train)
         model = burgersraissilambda.PhysicsInformedNN(lam, inputs.X_u_train,  inputs.u_train, inputs.X_f_train, burgers_layers, lb, ub, inputs.nu, X_star, N_u, N_f, N_u2, N_f2, m, typen)
         start_time = time.time()
         #if N_f > 0:
@@ -121,7 +125,11 @@ def main():
     #with open('final_lambda.p', 'wb') as fp:
     #    pickle.dump({'lambda': l}, fp, protocl=2)
     print(errors)
-    with open('datacomparison.p', 'rb') as fp:
+    if typen == 'N_u' :
+        N_f2 = 0
+    if typen == 'N_f' :
+        N_u2 = 0
+    with open('data_comparison.p', 'rb') as fp:
         d = pickle.load(fp)
     if typen in d.keys():
         dictionary = d[typen]
@@ -134,7 +142,7 @@ def main():
     elif typen == 'both' :
         dictionary[(m, N_u2, N_f2)] = errors
     d[typen] = dictionary
-    with open('datacomparison.p', 'wb') as fp:
+    with open('data_comparison.p', 'wb') as fp:
         pickle.dump(d, fp, protocol=2)
     
 
