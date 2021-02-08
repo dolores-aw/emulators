@@ -1,0 +1,23 @@
+{
+  "bs": 131072,
+  "checkpoint": true,
+  "factor": 5,
+  "gpus": 4,
+  "levels": 4,
+  "lr": 0.001,
+  "lr_decay": 0.4,
+  "lr_decay_patience": 1,
+  "min_lr": 1e-08,
+  "mode": "avg_basket",
+  "n_iterations": 2,
+  "n_test_batches": 1,
+  "n_train_batches": 5,
+  "net": "MultilevelNet",
+  "norm_layer": "batchnorm",
+  "opt": "adamw",
+  "pde": "Basket",
+  "seed": 0,
+  "unfreeze": "all",
+  "unfreeze_patience": 1,
+  "weight_decay": 0.01
+}
